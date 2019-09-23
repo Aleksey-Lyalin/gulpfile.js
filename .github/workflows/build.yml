@@ -8,6 +8,8 @@ on:
     branches:
       - master
       - actions
+    tags:
+      - test-*
 
 jobs:
   lint:
@@ -47,17 +49,6 @@ jobs:
   publish-gpr:
     needs: build
     runs-on: ubuntu-latest
-    on:
-      pull_request:
-        branches:
-          - master
-        tags:
-          - v*
-      push:
-        branches:
-          - master
-        tags:
-          - v*
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
