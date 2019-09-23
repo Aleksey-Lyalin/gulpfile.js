@@ -44,16 +44,29 @@ jobs:
 #        env:
 #          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
-#  publish-gpr:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v1
-#      - uses: actions/setup-node@v1
-#        with:
-#          node-version: 10
-#          registry-url: https://npm.pkg.github.com/
-#          scope: '@cyrale'
-#      - run: npm publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    on:
+      pull_request:
+        branches:
+          - master
+        tags:
+          - v*
+      push:
+        branches:
+          - master
+        tags:
+          - v*
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+          registry-url: https://npm.pkg.github.com/
+          scope: '@cyrale'
+      - run: npm ci
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
